@@ -12,7 +12,7 @@
 
 1. Adding sprite animations
 2. Adding skins
-3. Adding chalanges system
+3. Adding challenges system
 4. Adding score table
 5. Adding different control functions
 6. Reworking sound effects
