@@ -17,6 +17,6 @@
 5. Adding different control functions
 6. Reworking sound effects
 
-## Contacts
+## CONTACTS
 
 ***andr3y.krivosh3ia@gmail.com***
