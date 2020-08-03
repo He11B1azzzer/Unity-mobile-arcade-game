@@ -1,26 +1,31 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+
 public class Moving : MonoBehaviour
 {
-    public float speed = 20f;
+    private float speed = 20f;
     public Rigidbody2D rb;
     void Start(){
-        Scene currentScene = SceneManager.GetActiveScene();
-        if (currentScene.name == "GameScene") {
-            rb.transform.position += new Vector3(0,3.0f,0);
+  
+        if (SceneManager.GetActiveScene().name == "GameScene") {
             StartCoroutine(CheckState());
         }
     }
-    void OnMouseDrag(){
-        Scene currentScene = SceneManager.GetActiveScene();
-        if (currentScene.name == "GameScene"){
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            mousePos.x = mousePos.x > 2.32f ? 2.32f: mousePos.x;
-            mousePos.x = mousePos.x < -2.32f ? -2.32f: mousePos.x;
-            mousePos.y = mousePos.y > 4.3f ? 4.3f: mousePos.y;
-            mousePos.y = mousePos.y < -4.3f ? -4.3f: mousePos.y;
-            rb.position = Vector2.MoveTowards(rb.position, new Vector2(mousePos.x,mousePos.y), speed * Time.deltaTime * 4.5f);
+    void Update()
+    {
+        OnTouch();
+    }
+    void OnTouch()
+    {
+        if (SceneManager.GetActiveScene().name == "GameScene")
+        {
+            rb.position = new Vector2(Mathf.Clamp(rb.transform.position.x,-2.32f,2.32f),
+                                                Mathf.Clamp(rb.transform.position.y,-4.3f,4.3f));
+            rb.position = Vector2.MoveTowards(rb.position,
+                                                new Vector2(Camera.main.ScreenToWorldPoint(Input.mousePosition).x,
+                                                Camera.main.ScreenToWorldPoint(Input.mousePosition).y),
+                                                speed * Time.deltaTime * 4.5f);
         }
     }
     public IEnumerator CheckState(){
@@ -37,7 +42,7 @@ public class Moving : MonoBehaviour
             float curRotation = rb.rotation;
             Vector3 scaleMove = new Vector3(0.164f,0.192f,0.192f);
             if (curPosy > prevPosy){
-                StarsFalling.fallingSpeed += (curPosy - prevPosy) / 3 / Time.deltaTime;
+                StarsFalling.fallingSpeed += (curPosy - prevPosy) / 2 / Time.deltaTime;
             } else {
                 StarsFalling.fallingSpeed = mustSpeed;
             }

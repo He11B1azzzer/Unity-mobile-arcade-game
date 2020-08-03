@@ -1,19 +1,36 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class GameOverController : MonoBehaviour
 {
+    public GameObject gameOverObject;
+    public GameObject quitObject;
     public Text scoreText;
-    public Text scoreDef;
+    public Text highScoreText;
     public AudioSource KeyPress;
-    public void DrawScore(){
-        Scene currentScene = SceneManager.GetActiveScene();
-        if (currentScene.name == "GameOver"){
-            scoreText.text = ScoreScript.scoreValue.ToString();
-            scoreDef.text = "YOUR SCORE";
+    void Start()
+    {
+        if (SceneManager.GetActiveScene().name == "GameOver")
+        {
+            gameOverObject.SetActive(true);
+            if (ScoreScript.scoreValue > 0)
+            {
+                scoreText.text = ScoreScript.scoreValue.ToString();
+            }
+            else
+            {
+                scoreText.text = 0.ToString();
+            }
+            if (ScoreScript.scoreValue > PlayerPrefs.GetInt("HighScore"))
+            {
+                PlayerPrefs.SetInt("HighScore", ScoreScript.scoreValue);
+                highScoreText.text = ScoreScript.scoreValue.ToString();
+            }
+            else
+            {
+                highScoreText.text = PlayerPrefs.GetInt("HighScore").ToString();
+            }
         }
     }
     public void Retry()
@@ -23,8 +40,8 @@ public class GameOverController : MonoBehaviour
         BonusPointsController.checkNeg = false;
         BonusPointsController.bonusRunning = false;
         BonusPointsController.debuffRunning = false;
-        Scene currentScene = SceneManager.GetActiveScene();
-        if (currentScene.name == "GameOver"){
+        if (SceneManager.GetActiveScene().name == "GameOver")
+        {
             SceneManager.LoadScene("GameScene");
             ScoreScript.scoreValue = 0;
             StarsFalling.fallingSpeed = 10f;
@@ -32,8 +49,27 @@ public class GameOverController : MonoBehaviour
             BonusPointsController.countdownTimeNeg = 5;
         }
     }
-    public void exitGame(){
+
+    public void Menu()
+    {
+        KeyPress.Play();
+        SceneManager.LoadScene("MainMenu");
+    }
+    public void exitGame()
+    {
+        KeyPress.Play();
+        gameOverObject.SetActive(false);
+        quitObject.SetActive(true);
+    }
+    public void Yes()
+    {
         KeyPress.Play();
         Application.Quit();
+    }
+    public void No()
+    {
+        KeyPress.Play();
+        quitObject.SetActive(false);
+        gameOverObject.SetActive(true);
     }
 }

@@ -10,6 +10,7 @@ TagManager:
   - TargetDebuff
   - InstantLose
   - Barrier
+  - Spawner
   layers:
   - Default
   - TransparentFX
